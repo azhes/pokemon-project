@@ -1,0 +1,1 @@
+from .charmander import Charmander
