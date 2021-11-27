@@ -1,10 +1,8 @@
-from pokemon import Pokemon
-from move import Move
-from pokemon_classes import Charmander
-from trainer import Trainer
 import pygame
-import pygame_textinput
 import pygame.locals
+import pygame.font
+from views import GameView
+from controllers import Game
 
 def main():
     """ Main function to run the game """
@@ -13,22 +11,18 @@ def main():
     pygame.init()
 
     # Create a window
-    window = pygame.display.set_mode((1000, 1000))        
+    window = pygame.display.set_mode((1000, 1000))
 
-    # Player inputs their name
-    backgroundSurface = pygame.Surface((50, 50))
-    color = pygame.Color(255, 20, 10)
-    arial = pygame.font.SysFont('arial', 24)
+    # Create the game view and controller
+    game_view = GameView(window)
+    game = Game()
 
-
-
-    # # New player
-    # player = Trainer()
+    # Run the game
+    game.run(window)
 
 
 
 if __name__ == "__main__":
     main()
-    char = Charmander("char", 39, 52, 43, 60, 50, 65, 'fire')
 
 
