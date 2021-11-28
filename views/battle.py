@@ -47,9 +47,6 @@ class BattleView(PygameView):
         self.clear_dialogue()
         self.write_dialogue(moves_text)
 
-        state = 'moves'
-        return state
-
     def show_attack(self, pokemon_nickname, move_name, effectiveness):
         """ Shows the move being used by the pokemon.
         Shows if the move is super effective (2) or not very effective (0.5). """
@@ -62,18 +59,12 @@ class BattleView(PygameView):
         self.clear_dialogue()
         self.write_dialogue(attack_text)
 
-        state = 'attack'
-        return state
-
     def show_faint(self, pokemon_nickname):
         """ Shows if the pokemon has fainted. """
         faint_text = f'{pokemon_nickname} fainted'
 
         self.clear_dialogue()
         self.write_dialogue(faint_text)
-
-        state = 'faint'
-        return state
 
     def show_result(self, result):
         """ Shows if the player won or lost. """
@@ -83,9 +74,6 @@ class BattleView(PygameView):
         elif result == 0:
             self.write_dialogue(f'You lost.')
         
-        state = 'result'
-        return state
-
     def draw(self):
         self.window.fill((255, 255, 255))
         pygame.Surface.fill(self.battle_surface, (255, 255, 255))
@@ -100,8 +88,9 @@ class BattleView(PygameView):
         trainer_pokemon_sprite = pygame.transform.scale(trainer_pokemon_sprite, (420, 420))
         self.battle_surface.blit(trainer_pokemon_sprite, (10, 330))
 
-        # Show player's pokemon's nickname
+        # Show player's pokemon's nickname and HP
         drawText(self.battle_surface, self.trainer_pokemon.nickname, (0, 0, 0), (20, 240, 300, 50), self.font)
+        self.update_player_HP()
 
         # Show opponent's pokemon front sprite
         rival_pokemon_sprite = self.rival_pokemon.front
@@ -110,5 +99,6 @@ class BattleView(PygameView):
 
         # Show opponent's pokemon's nickname
         drawText(self.battle_surface, self.rival_pokemon.nickname, (0, 0, 0), (700, 400, 300, 50), self.font) 
+        self.update_opponent_HP()
 
         self.window.blit(self.battle_surface, (0, 0))

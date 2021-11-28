@@ -12,6 +12,8 @@ class BattleController(PygameController):
         super().__init__(view)
         self.window = window
         self.view = view
+        self.battle_run = True
+        self.state = 'moves'
 
     def type_effectiveness(self, mv_type, def_type):
         """ Method for determining type effectiveness """
@@ -68,10 +70,18 @@ class BattleController(PygameController):
 
         return damage
 
+    def run_battle(self):
+        """ Runs the battle """
+        while self.battle_run is True:
+            while self.state == 'moves':
+                self.view.show_moves()
+
     def process(self, event):
         running = super().process(event)
 
         if running is False:
-            return False  
+            return False     
+
+        self.run_battle()   
 
         return True
