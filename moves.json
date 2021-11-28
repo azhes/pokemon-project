@@ -19,6 +19,34 @@
         "power": 40,
         "accuracy": 1,
         "type": "normal"
+    },
+    {
+        "name": "Water Gun",
+        "pp": 25,
+        "power": 40,
+        "accuracy": 1,
+        "type": "water"
+    },
+    {
+        "name": "Vine Whip",
+        "pp": 25,
+        "power": 45,
+        "accuracy": 1,
+        "type": "grass"
+    },
+    {
+        "name": "Thunder Shock",
+        "pp": 30,
+        "power": 40,
+        "accuracy": 1,
+        "type": "electric"
+    },
+    {
+        "name": "Quick Attack",
+        "pp": 30,
+        "power": 40,
+        "accuracy": 1,
+        "type": "normal"
     }
 
 ]
