@@ -64,6 +64,4 @@ class Game():
         battle_view = BattleView(window, font, trainer_pokemon, rival_pokemon)
         battle_controller = BattleController(battle_view, window)
         battle_controller.run()
-        damage = battle_controller.calculate_damage(25, 40, 40, 'grass', 'water', 'grass')
-        print (damage)
         return True

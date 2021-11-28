@@ -72,8 +72,6 @@ class BattleController(PygameController):
         running = super().process(event)
 
         if running is False:
-            return False
-
-        
+            return False  
 
         return True

@@ -22,7 +22,7 @@ class BattleView(PygameView):
 
     def clear_dialogue(self):
         """ Clears the dialogue box """
-        pygame.draw.rect(self.battle_surface, (255, 255, 255, 255), (50, 750, 600, 100))
+        pygame.draw.rect(self.battle_surface, (255, 255, 255, 255), (40, 750, 600, 100))
 
     def update_player_HP(self, value=0):
         """ Shows updated HP values for player's pokemon """
@@ -38,6 +38,53 @@ class BattleView(PygameView):
         pygame.draw.rect(self.battle_surface, (255, 255, 255, 255), (700, 450, 200, 100))
         drawText(self.battle_surface, hp_text, (0, 0, 0), (700, 450, 200, 100), self.font)
 
+    def show_moves(self):
+        """ Shows the player's pokemon's moves """
+        moves_text = ''
+        for index, move in enumerate(self.trainer_pokemon.moves_list):
+            moves_text += f'{index + 1} {move.name}     '
+
+        self.clear_dialogue()
+        self.write_dialogue(moves_text)
+
+        state = 'moves'
+        return state
+
+    def show_attack(self, pokemon_nickname, move_name, effectiveness):
+        """ Shows the move being used by the pokemon.
+        Shows if the move is super effective (2) or not very effective (0.5). """
+        attack_text = f'{pokemon_nickname} used {move_name}!'
+        if effectiveness == 2:
+            attack_text += f'It\'s super effective!'
+        elif effectiveness == 0.5:
+            attack_text += f'It\'s not very effective.'
+
+        self.clear_dialogue()
+        self.write_dialogue(attack_text)
+
+        state = 'attack'
+        return state
+
+    def show_faint(self, pokemon_nickname):
+        """ Shows if the pokemon has fainted. """
+        faint_text = f'{pokemon_nickname} fainted'
+
+        self.clear_dialogue()
+        self.write_dialogue(faint_text)
+
+        state = 'faint'
+        return state
+
+    def show_result(self, result):
+        """ Shows if the player won or lost. """
+        self.clear_dialogue()
+        if result == 1:
+            self.write_dialogue(f'You won!')
+        elif result == 0:
+            self.write_dialogue(f'You lost.')
+        
+        state = 'result'
+        return state
 
     def draw(self):
         self.window.fill((255, 255, 255))
@@ -62,6 +109,6 @@ class BattleView(PygameView):
         self.battle_surface.blit(rival_pokemon_sprite, (600, 100))
 
         # Show opponent's pokemon's nickname
-        drawText(self.battle_surface, self.rival_pokemon.nickname, (0, 0, 0), (700, 400, 300, 50), self.font)        
+        drawText(self.battle_surface, self.rival_pokemon.nickname, (0, 0, 0), (700, 400, 300, 50), self.font) 
 
         self.window.blit(self.battle_surface, (0, 0))
