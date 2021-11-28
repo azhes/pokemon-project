@@ -10,13 +10,6 @@ class PygameView(ABC):
         """ Constructor receives a window (where everything will be displayed) """
         self.window = window
 
-    def render_text_surface(self, text):
-        """ Utility function to render a text surface """
-        rby = pygame.font.Font('../fonts/PKMN RBYGSC.ttf', 24)
-        text_surface = rby.render(text, True, (0, 0, 0))
-
-        return text_surface
-
     @abstractmethod
     def draw(self):
         """ Child classes must implement the draw method """

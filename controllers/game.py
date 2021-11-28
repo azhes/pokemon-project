@@ -10,7 +10,7 @@ class Game():
 
     def __init__(self):
         """ Constructor - sets variables """
-        self.name = ''
+        pass
 
     def run(self, window):
         """ Runs the game """

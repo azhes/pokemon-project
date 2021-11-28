@@ -1,9 +1,9 @@
 import pygame
-from pokemon import Pokemon
+from models import Pokemon
 
 class Charmander(Pokemon):
     """ Represents a Charmander. Inherits from Pokemon. """
-    def __init__(self, nickname, hp, attack, defense, spattack, spdefense, speed, type1, type2=None, name='Charmander'):
+    def __init__(self, nickname, hp=39, attack=52, defense=43, spattack=60, spdefense=50, speed=65, type1='Fire', type2=None, name='Charmander'):
         super().__init__(nickname, hp, attack, defense, spattack, spdefense, speed, type1, type2=None)
         if name == nickname:
             self.nickname = name

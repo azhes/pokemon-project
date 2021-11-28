@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from move import Move
+from .move import Move
 import json
 
 class Pokemon(ABC):
