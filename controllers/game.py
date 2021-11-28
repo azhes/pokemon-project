@@ -1,9 +1,9 @@
+from controllers.pokemon_select import PokemonSelectController
 import pygame
 import pygame.locals
 
-from .name import NameController
-from views import NameView
 from views import PokemonSelectView
+from models import Trainer
 
 class Game():
     """ Main game controller """
@@ -17,15 +17,12 @@ class Game():
         # Create the font
         font = pygame.font.Font('fonts\PKMN RBYGSC.ttf', 24)
 
-        # Name view and controller are created - player enters their name and presses "enter"
-        name_view = NameView(window, font)
-        name_controller = NameController(name_view, window)
-        name_controller.run()
-        self.name = name_view.textinput.value
-        print(self.name)
+        # Create a trainer instance
+        trainer = Trainer()
 
         # Pokemon list view and controller are created - player selects their pokemon team
-        pokemon_select_view = PokemonSelectView(self.name, window)
-
+        pokemon_select_view = PokemonSelectView(window, font)
+        pokemon_select_controller = PokemonSelectController(trainer, pokemon_select_view, window)
+        pokemon_select_controller.run()
 
         return True

@@ -17,7 +17,7 @@ class PygameController(ABC):
         """ The controller receives a view when instantiated. """
         self.view = view
 
-    def run(self, stop_after=None):
+    def run(self):
         """
         Main method: runs a Pygame loop and passes the event to self.process
          to return anything else than True to stop the loop.
@@ -37,9 +37,6 @@ class PygameController(ABC):
                 if running is False:
                     break
             now = pygame.time.get_ticks()
-            if stop_after is not None:
-                if now - start >= stop_after * 1000:
-                    running = False
 
     def process(self, event):
         """ Abstract method: should be implemented by child classes """
