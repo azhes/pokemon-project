@@ -4,7 +4,7 @@ from models import drawText
 
 class PokemonSelectView(PygameView):
     """ Shows the player a list of available pokemon.
-    The player selects up to 3 pokemon for their team.
+    The player selects 1 pokemon for their team.
     draw() method displays sprites of the available pokemon and a
     selection box next to each. """
 

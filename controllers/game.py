@@ -1,11 +1,12 @@
-from controllers.pokemon_select import PokemonSelectController
 import pygame
 import pygame.locals
 import random
 
-from views import PokemonSelectView
+from views import PokemonSelectView, BattleView
 from models import Trainer
 from pokemon_classes import Charmander, Bulbasaur, Squirtle, Pikachu
+from .pokemon_select import PokemonSelectController
+from .battle import BattleController
 
 class Game():
     """ Main game controller """
@@ -46,16 +47,23 @@ class Game():
         # Add moves to the player's pokemon
         self.add_moves(trainer.pokemon_list)
 
+        trainer_pokemon = trainer.pokemon_list[0]
+
         # Create opponent trainer instance
         rival = Trainer()
 
         # Give opponent a random pokemon
         opponent_pokemon = [Charmander('Burny'), Bulbasaur('Leafy'), Squirtle('Shelly'), Pikachu('Zappy')]
         rival.pokemon_list.append(random.choice(opponent_pokemon))
+        rival_pokemon = rival.pokemon_list[0]
 
         # Add moves to opponent's pokemon
         self.add_moves(rival.pokemon_list)
 
         # Create battle view and controller - run battle
-
+        battle_view = BattleView(window, font, trainer_pokemon, rival_pokemon)
+        battle_controller = BattleController(battle_view, window)
+        battle_controller.run()
+        damage = battle_controller.calculate_damage(25, 40, 40, 'grass', 'water', 'grass')
+        print (damage)
         return True
