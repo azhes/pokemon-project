@@ -26,27 +26,33 @@ class BattleController:
         effectiveness = {
             'fire': {
                 'weakness': ['water'],
-                'strength': ['grass', 'fire']
+                'strength': ['grass', 'fire'],
+                'immune': []
             },
             'water': {
                 'weakness': ['grass', 'electric'],
-                'strength': ['fire', 'water']
+                'strength': ['fire', 'water'],
+                'immune': []
             },
             'grass': {
                 'weakness': ['fire'],
-                'strength': ['grass', 'electric', 'water']
+                'strength': ['grass', 'electric', 'water'],
+                'immune': []
             },
             'electric': {
                 'weakness': ['water'],
-                'strength': ['electric']
+                'strength': ['electric'],
+                'immune': []
             },
             'ghost': {
                 'weakness': ['ghost'],
-                'strength': ['ghost']
+                'strength': ['ghost'],
+                'immune': ['normal']
             },
             'poison': {
                 'weakness': ['psychic'],
                 'strength': ['grass'],
+                'immune': []
             }
         }
 
@@ -54,6 +60,8 @@ class BattleController:
             multiplier = 2
         elif mv_type in effectiveness[def_type]['strength']:
             multiplier = 0.5
+        elif mv_type in effectiveness[def_type]['immune']:
+            multiplier = 0
         else:
             multiplier = 1
 

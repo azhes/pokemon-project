@@ -56,6 +56,8 @@ class BattleView(PygameView):
             attack_text += f'It\'s super effective!'
         elif effectiveness == 0.5:
             attack_text += f'It\'s not very effective.'
+        elif effectiveness == 0:
+            attack_text += f'It doesn\'t affect the opponent.'
         if critical == 2:
             attack_text += f'A critical hit!'
 
