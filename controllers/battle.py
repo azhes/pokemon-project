@@ -162,7 +162,7 @@ class BattleController:
                                 damage, self.first_effectiveness, first_critical = self.calculate_damage(direction, first_move)
                                 self.to_pokemon.current_hp -= damage
                                 if self.to_pokemon.current_hp <= 0:
-                                    self.state = 'faint'
+                                    self.state = 'first_attack'
 
                                 if self.to_pokemon == self.trainer_pokemon:
                                     self.view.update_player_HP()
@@ -263,7 +263,10 @@ class BattleController:
                         if event.key == pygame.locals.K_ESCAPE:
                             pygame.quit()
                         if event.key == pygame.locals.K_RETURN:
-                            self.state = 'second_attack'
+                            if self.from_pokemon.current_hp == 0:
+                                self.state = 'faint'
+                            else:
+                                self.state = 'second_attack'
 
                 self.view.draw()
                 self.view.update()
