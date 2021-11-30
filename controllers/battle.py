@@ -4,8 +4,7 @@ import random
 from views import BattleView
 
 class BattleController:
-    """ Controls a pokemon battle. 
-    Constructor takes"""
+    """ Controls a pokemon battle. """
 
     FPS = 60
 
