@@ -2,7 +2,7 @@ import pygame
 import pygame.locals
 from views import PokemonSelectView
 from .base import PygameController
-from pokemon_classes import Charmander, Bulbasaur, Squirtle, Pikachu
+from pokemon_classes import Charmander, Bulbasaur, Squirtle, Pikachu, Gengar
 
 class PokemonSelectController(PygameController):
     """ When the player clicks on a button next to a pokemon, it adds
@@ -57,6 +57,15 @@ class PokemonSelectController(PygameController):
             ):
                 pika = Pikachu('Pikachu')
                 self.trainer.pokemon_list.append(pika)
+                return False
+            elif (
+                event.pos[0] >= 30
+                and event.pos[0] <= 330
+                and event.pos[1] >= 600
+                and event.pos[1] <= 700
+            ):
+                geng = Gengar('Gengar')
+                self.trainer.pokemon_list.append(geng)
                 return False
 
         return True

@@ -39,6 +39,14 @@ class BattleController:
             'electric': {
                 'weakness': ['water'],
                 'strength': ['electric']
+            },
+            'ghost': {
+                'weakness': ['ghost'],
+                'strength': ['ghost']
+            },
+            'poison': {
+                'weakness': ['psychic'],
+                'strength': ['grass'],
             }
         }
 

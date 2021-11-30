@@ -47,6 +47,20 @@
         "power": 40,
         "accuracy": 1,
         "type": "normal"
+    },
+    {
+        "name": "Shadow Ball",
+        "pp": 15,
+        "power": 80,
+        "accuracy": 1,
+        "type": "ghost"
+    },
+    {
+        "name": "Sludge Bomb",
+        "pp": 10,
+        "power": 90,
+        "accuracy": 1,
+        "type": "poison"
     }
 
 ]

@@ -30,6 +30,9 @@ class Game:
         if trainer_pokemon.species == "Pikachu":
             trainer_pokemon.add_move("Thunder Shock")
             trainer_pokemon.add_move("Quick Attack")
+        if trainer_pokemon.species == "Gengar":
+            trainer_pokemon.add_move("Shadow Ball")
+            trainer_pokemon.add_move("Sludge Bomb")
 
     def run(self, window):
         """ Runs the game """

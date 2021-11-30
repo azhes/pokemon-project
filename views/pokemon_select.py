@@ -47,5 +47,12 @@ class PokemonSelectView(PygameView):
         pika_text = f'Pikachu'
         drawText(pokemon_surface, pika_text, (0, 0, 0), (720, 430, 200, 100), self.font)
 
+        geng_sprite = pygame.image.load('sprites\geng_front.png')
+        geng_sprite = pygame.transform.scale(geng_sprite, (120, 120))
+        pokemon_surface.blit(geng_sprite, (325, 600))
+        geng_select = pygame.draw.rect(pokemon_surface, (204, 0, 204), (30, 600, 300, 100))
+        geng_text = f'Gengar'
+        drawText(pokemon_surface, geng_text, (0, 0, 0), (85, 630, 200, 100), self.font)
+
         self.window.blit(pokemon_surface, (0, 0))
 
