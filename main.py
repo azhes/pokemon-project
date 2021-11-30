@@ -1,7 +1,6 @@
 import pygame
 import pygame.locals
 import pygame.font
-from views import GameView
 from controllers import Game
 
 def main():
@@ -18,7 +17,6 @@ def main():
 
     # Run the game
     game.run(window)
-
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ from pokemon_classes import Charmander, Bulbasaur, Squirtle, Pikachu
 from .pokemon_select import PokemonSelectController
 from .battle import BattleController
 
-class Game():
+class Game:
     """ Main game controller """
 
     def __init__(self):
