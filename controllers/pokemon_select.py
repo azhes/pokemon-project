@@ -5,7 +5,7 @@ from .base import PygameController
 from pokemon_classes import Charmander, Bulbasaur, Squirtle, Pikachu
 
 class PokemonSelectController(PygameController):
-    """ When the player click on a button next to a pokemon, it adds
+    """ When the player clicks on a button next to a pokemon, it adds
     that pokemon to the player's team. Buttons disappear and new button
     appears asking player if they want to start the battle. """
 
