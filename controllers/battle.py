@@ -2,18 +2,25 @@ import pygame
 import pygame.locals
 import random
 from views import BattleView
-from .base import PygameController
 
-class BattleController(PygameController):
+class BattleController:
     """ Controls a pokemon battle. 
     Constructor takes"""
 
-    def __init__(self, view, window):
-        super().__init__(view)
+    FPS = 60
+
+    def __init__(self, view, window, trainer_pokemon, rival_pokemon):
+        self.view = view
         self.window = window
         self.view = view
         self.battle_run = True
         self.state = 'moves'
+        self.trainer_pokemon = trainer_pokemon
+        self.rival_pokemon = rival_pokemon
+        self.from_pokemon = None
+        self.to_pokemon = None
+        self.first_effectiveness = None
+        self.second_effectiveness = None
 
     def type_effectiveness(self, mv_type, def_type):
         """ Method for determining type effectiveness """
@@ -31,8 +38,8 @@ class BattleController(PygameController):
                 'strength': ['grass', 'electric', 'water']
             },
             'electric': {
-                'weakness': [],
-                'strength': ['water']
+                'weakness': ['water'],
+                'strength': ['electric']
             }
         }
 
@@ -45,8 +52,21 @@ class BattleController(PygameController):
 
         return multiplier
 
-    def calculate_damage(self, attack, defense, power, atk_type, def_type, mv_type):
+    def calculate_damage(self, direction, mv_index):
         """ Calculates damage """
+        if direction:
+            from_pokemon = self.trainer_pokemon
+            to_pokemon = self.rival_pokemon
+        else:
+            from_pokemon = self.rival_pokemon
+            to_pokemon = self.trainer_pokemon
+        move = from_pokemon.moves_list[mv_index]
+        mv_type = move.type
+        def_type = to_pokemon.type1
+        power = move.power
+        atk_type = self.trainer_pokemon.type1
+        attack = self.trainer_pokemon.attack
+        defense = self.trainer_pokemon.defense
 
         # 10% chance of a critical hit (double damage)
         critical_chance = random.randint(0, 9)
@@ -68,20 +88,228 @@ class BattleController(PygameController):
         # calculate damage (adapted from https://bulbapedia.bulbagarden.net/wiki/Damage)
         damage = int((((((10 / 5) + 2) * power * (attack/defense))/50)+2) * stab * effectiveness * critical)
 
-        return damage
+        return damage, effectiveness
 
-    def run_battle(self):
-        """ Runs the battle """
-        while self.battle_run is True:
+    def run(self):
+
+        running = True
+        start = pygame.time.get_ticks()
+        clock = pygame.time.Clock()
+
+        while self.trainer_pokemon.current_hp > 0 and self.rival_pokemon.current_hp > 0:
+            clock.tick(self.FPS)
+            
+            # Show move selection
             while self.state == 'moves':
                 self.view.show_moves()
+                self.view.draw()
+                self.view.update()
+                for event in pygame.event.get():
+                    if event.type == pygame.locals.QUIT:
+                        pygame.quit()
+                    elif event.type == pygame.locals.KEYDOWN:
+                        if event.key == pygame.locals.K_ESCAPE:
+                            pygame.quit()
+                        if event.key == pygame.locals.K_1:
+                            player_mv_index = 0
+                            opponent_mv_index = random.randint(0, 1)
+                            if self.trainer_pokemon.speed > self.rival_pokemon.speed:
+                                direction = True
+                                self.from_pokemon = self.trainer_pokemon
+                                self.to_pokemon = self.rival_pokemon
+                                first_move = player_mv_index
+                                second_move = opponent_mv_index
+                            elif self.trainer_pokemon.speed < self.rival_pokemon.speed:
+                                direction = False
+                                self.from_pokemon = self.rival_pokemon
+                                self.to_pokemon = self.trainer_pokemon
+                                first_move = opponent_mv_index
+                                second_move = player_mv_index
+                            else:
+                                direction = random.choice([True, False])
+                                self.from_pokemon = random.choice([self.trainer_pokemon, self.rival_pokemon])
+                                if self.from_pokemon == self.trainer_pokemon:
+                                    self.to_pokemon = self.rival_pokemon
+                                    first_move = player_mv_index
+                                    second_move = opponent_mv_index
+                                else:
+                                    self.to_pokemon = self.trainer_pokemon
+                                    first_move = opponent_mv_index
+                                    second_move = player_mv_index
 
-    def process(self, event):
-        running = super().process(event)
+                            damage, self.first_effectiveness = self.calculate_damage(direction, first_move)
+                            self.to_pokemon.current_hp -= damage
+                            if self.to_pokemon.current_hp <= 0:
+                                self.state = 'faint'
+                            print(f'Effectiveness: {self.first_effectiveness}')
 
-        if running is False:
-            return False     
+                            if self.to_pokemon == self.trainer_pokemon:
+                                self.view.update_player_HP()
+                                self.to_pokemon = self.rival_pokemon
+                                self.from_pokemon = self.trainer_pokemon
+                            else:
+                                self.view.update_opponent_HP()
+                                self.to_pokemon = self.trainer_pokemon
+                                self.from_pokemon = self.rival_pokemon
+                                print(self.rival_pokemon.current_hp)
+    
+                            damage, self.second_effectiveness = self.calculate_damage(not direction, second_move)
+                            print(not direction)
+                            
+                            self.to_pokemon.current_hp -= damage
+                            if self.to_pokemon.current_hp <= 0:
+                                self.state = 'faint'
+                            print(f'Effectiveness: {self.first_effectiveness}')
+                            if self.to_pokemon == self.trainer_pokemon:
+                                self.view.update_player_HP()
+                            else:
+                                print('bye')
+                                self.view.update_opponent_HP()
+                                print(self.rival_pokemon.current_hp)
 
-        self.run_battle()   
+                            self.state = 'first_attack'
+                        elif event.key == pygame.locals.K_2:
+                            player_mv_index = 1
+                            opponent_mv_index = random.randint(0, 1)
+                            if self.trainer_pokemon.speed > self.rival_pokemon.speed:
+                                direction = True
+                                self.from_pokemon = self.trainer_pokemon
+                                self.to_pokemon = self.rival_pokemon
+                                first_move = player_mv_index
+                                second_move = opponent_mv_index
+                            elif self.trainer_pokemon.speed < self.rival_pokemon.speed:
+                                direction = False
+                                self.from_pokemon = self.rival_pokemon
+                                self.to_pokemon = self.trainer_pokemon
+                                first_move = opponent_mv_index
+                                second_move = player_mv_index
+                            else:
+                                direction = random.choice([True, False])
+                                self.from_pokemon = random.choice([self.trainer_pokemon, self.rival_pokemon])
+                                if self.from_pokemon == self.trainer_pokemon:
+                                    self.to_pokemon = self.rival_pokemon
+                                    first_move = player_mv_index
+                                    second_move = opponent_mv_index
+                                else:
+                                    self.to_pokemon = self.trainer_pokemon
+                                    first_move = opponent_mv_index
+                                    second_move = player_mv_index
 
-        return True
+                            damage, self.first_effectiveness = self.calculate_damage(direction, first_move)
+                            self.to_pokemon.current_hp -= damage
+                            if self.to_pokemon.current_hp <= 0:
+                                self.state = 'faint'
+                            print(self.to_pokemon.nickname, self.to_pokemon.current_hp, damage)
+                            print(f'Effectiveness: {self.first_effectiveness}')
+                            
+                            if self.to_pokemon == self.trainer_pokemon:
+                                self.view.update_player_HP()
+                                self.to_pokemon = self.rival_pokemon
+                                self.from_pokemon = self.trainer_pokemon
+                            else:
+                                self.view.update_opponent_HP()
+                                self.to_pokemon = self.trainer_pokemon
+                                self.from_pokemon = self.rival_pokemon
+    
+                            damage, self.second_effectiveness = self.calculate_damage(not direction, second_move)
+                            self.to_pokemon.current_hp -= damage
+                            if self.to_pokemon.current_hp <= 0:
+                                self.state = 'faint'
+                            print(self.to_pokemon.nickname, self.to_pokemon.current_hp, damage)
+                            print(f'Effectiveness: {self.second_effectiveness}')
+
+                            if self.to_pokemon == self.trainer_pokemon:
+                                self.view.update_player_HP()
+                            else:
+                                self.view.update_opponent_HP()
+                            self.state = 'attack'
+
+                self.view.draw()
+                self.view.update()
+            
+            while self.state == 'first_attack':
+                self.view.show_attack(self.to_pokemon.nickname, self.to_pokemon.moves_list[first_move].name, self.first_effectiveness)
+                for event in pygame.event.get():
+                    if event.type == pygame.locals.QUIT:
+                        pygame.quit()
+                    elif event.type == pygame.locals.KEYDOWN:
+                        if event.key == pygame.locals.K_ESCAPE:
+                            pygame.quit()
+                        if event.key == pygame.locals.K_RETURN:
+                            self.state = 'second_attack'
+
+                self.view.draw()
+                self.view.update()
+
+            while self.state == 'second_attack':
+                self.view.show_attack(self.from_pokemon.nickname, self.from_pokemon.moves_list[second_move].name, self.second_effectiveness)
+                for event in pygame.event.get():
+                    if event.type == pygame.locals.QUIT:
+                        pygame.quit()
+                    elif event.type == pygame.locals.KEYDOWN:
+                        if event.key == pygame.locals.K_ESCAPE:
+                            pygame.quit()
+                        if event.key == pygame.locals.K_RETURN:
+                            self.state = 'moves'
+
+                self.view.draw()
+                self.view.update()
+              
+        if self.trainer_pokemon.current_hp <= 0:
+            fainted_pokemon = self.trainer_pokemon
+            result = 0
+        if self.rival_pokemon.current_hp <= 0:
+            fainted_pokemon = self.rival_pokemon
+            result = 1
+
+        while running:
+            self.state = 'faint'
+            while self.state == 'faint':
+                self.view.show_faint(fainted_pokemon.nickname)
+                for event in pygame.event.get():
+                        if event.type == pygame.locals.QUIT:
+                            pygame.quit()
+                        elif event.type == pygame.locals.KEYDOWN:
+                            if event.key == pygame.locals.K_ESCAPE:
+                                pygame.quit()
+                            if event.key == pygame.locals.K_RETURN:
+                                self.state = 'result'
+                self.view.draw()
+                self.view.update()
+            
+            while self.state == 'result':
+                self.view.show_result(result)
+                for event in pygame.event.get():
+                        if event.type == pygame.locals.QUIT:
+                            pygame.quit()
+                        elif event.type == pygame.locals.KEYDOWN:
+                            if event.key == pygame.locals.K_ESCAPE:
+                                pygame.quit()
+                
+                self.view.draw()
+                self.view.update()
+
+                    
+        
+
+                
+        # while HP != 0:
+            # get event loop
+            # 2 states: enter and not enter (self.state)
+            # if self.state == moves:
+            # if key_pressed == ENTER:
+            #   self.view.show_moves()
+            # elif key_pressed == "1, 2"
+            #   self.calcaulate_damage()
+            #   self.view.attack()
+            # self.view.draw()
+            # self.view.update()
+        # while running
+            # wait for Enter
+            # self.view.show_faint()
+            # wait for Enter
+            # self.view.show_result()
+            # self.view.draw()
+            # self.view.update()
+
+

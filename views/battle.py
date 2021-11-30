@@ -15,6 +15,8 @@ class BattleView(PygameView):
         self.trainer_pokemon = trainer_pokemon
         self.rival_pokemon = rival_pokemon
         self.battle_surface = pygame.Surface((1000, 1000))
+        self.state = 'moves'
+        self.text = ''
 
     def write_dialogue(self, text):
         """ Writes text into the dialogue box on the screen """
@@ -24,17 +26,17 @@ class BattleView(PygameView):
         """ Clears the dialogue box """
         pygame.draw.rect(self.battle_surface, (255, 255, 255, 255), (40, 750, 600, 100))
 
-    def update_player_HP(self, value=0):
+    def update_player_HP(self):
         """ Shows updated HP values for player's pokemon """
-        max_hp = self.trainer_pokemon.hp
-        hp_text = f'HP: {self.trainer_pokemon.hp - value}/{max_hp}'
+        max_hp = self.trainer_pokemon.max_hp
+        hp_text = f'HP: {self.trainer_pokemon.current_hp}/{max_hp}'
         pygame.draw.rect(self.battle_surface, (255, 255, 255, 255), (20, 290, 200, 100))
         drawText(self.battle_surface, hp_text, (0, 0, 0), (20, 290, 200, 100), self.font)
 
-    def update_opponent_HP(self, value=0):
+    def update_opponent_HP(self):
         """ Shows updated HP values for opponent's pokemon """
-        max_hp = self.rival_pokemon.hp
-        hp_text = f'HP: {self.rival_pokemon.hp - value}/{max_hp}'
+        max_hp = self.rival_pokemon.max_hp
+        hp_text = f'HP: {self.rival_pokemon.current_hp}/{max_hp}'
         pygame.draw.rect(self.battle_surface, (255, 255, 255, 255), (700, 450, 200, 100))
         drawText(self.battle_surface, hp_text, (0, 0, 0), (700, 450, 200, 100), self.font)
 
@@ -44,8 +46,7 @@ class BattleView(PygameView):
         for index, move in enumerate(self.trainer_pokemon.moves_list):
             moves_text += f'{index + 1} {move.name}     '
 
-        self.clear_dialogue()
-        self.write_dialogue(moves_text)
+        self.text = moves_text
 
     def show_attack(self, pokemon_nickname, move_name, effectiveness):
         """ Shows the move being used by the pokemon.
@@ -56,23 +57,20 @@ class BattleView(PygameView):
         elif effectiveness == 0.5:
             attack_text += f'It\'s not very effective.'
 
-        self.clear_dialogue()
-        self.write_dialogue(attack_text)
+        self.text = attack_text
 
     def show_faint(self, pokemon_nickname):
         """ Shows if the pokemon has fainted. """
         faint_text = f'{pokemon_nickname} fainted'
 
-        self.clear_dialogue()
-        self.write_dialogue(faint_text)
+        self.text = faint_text
 
     def show_result(self, result):
         """ Shows if the player won or lost. """
-        self.clear_dialogue()
         if result == 1:
-            self.write_dialogue(f'You won!')
+            self.text = f'You won! Press escape to quit.'
         elif result == 0:
-            self.write_dialogue(f'You lost.')
+            self.text = f'You lost. Press escape to quit.'
         
     def draw(self):
         self.window.fill((255, 255, 255))
@@ -97,8 +95,13 @@ class BattleView(PygameView):
         rival_pokemon_sprite = pygame.transform.scale(rival_pokemon_sprite, (320, 320))
         self.battle_surface.blit(rival_pokemon_sprite, (600, 100))
 
-        # Show opponent's pokemon's nickname
+        # Show opponent's pokemon's nickname and HP
         drawText(self.battle_surface, self.rival_pokemon.nickname, (0, 0, 0), (700, 400, 300, 50), self.font) 
         self.update_opponent_HP()
+
+        self.clear_dialogue()
+        self.write_dialogue(self.text)
+
+        
 
         self.window.blit(self.battle_surface, (0, 0))

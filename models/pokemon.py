@@ -8,7 +8,8 @@ class Pokemon(ABC):
         """ All pokemon have HP, Attack, Defense, Special Attack,
         Special Defense, Speed """
         self._nickname = nickname
-        self._hp = hp
+        self._max_hp = hp
+        self._current_hp = hp
         self._attack = attack
         self._defense = defense
         self._spattack = spattack
@@ -29,14 +30,24 @@ class Pokemon(ABC):
         self._nickname = value
 
     @property
-    def hp(self):
-        """ Getter for HP """
-        return self._hp
+    def max_hp(self):
+        """ Getter for maximum HP """
+        return self._max_hp
 
-    @hp.setter
-    def hp(self, value):
-        """ Setter for HP """
-        self._hp = value
+    @max_hp.setter
+    def max_hp(self, value):
+        """ Setter for maximum HP """
+        self._max_hp = value
+
+    @property
+    def current_hp(self):
+        """ Getter for current HP """
+        return self._current_hp
+
+    @current_hp.setter
+    def current_hp(self, value):
+        """ Getter for current HP """
+        self._current_hp = value
 
     @property
     def attack(self):
