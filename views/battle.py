@@ -48,7 +48,7 @@ class BattleView(PygameView):
 
         self.text = moves_text
 
-    def show_attack(self, pokemon_nickname, move_name, effectiveness):
+    def show_attack(self, pokemon_nickname, move_name, effectiveness, critical):
         """ Shows the move being used by the pokemon.
         Shows if the move is super effective (2) or not very effective (0.5). """
         attack_text = f'{pokemon_nickname} used {move_name}!'
@@ -56,6 +56,8 @@ class BattleView(PygameView):
             attack_text += f'It\'s super effective!'
         elif effectiveness == 0.5:
             attack_text += f'It\'s not very effective.'
+        if critical == 2:
+            attack_text += f'A critical hit!'
 
         self.text = attack_text
 

@@ -69,8 +69,8 @@ class BattleController:
         defense = self.trainer_pokemon.defense
 
         # 10% chance of a critical hit (double damage)
-        critical_chance = random.randint(0, 9)
-        if critical_chance == 9:
+        critical_chance = random.randint(0, 2)
+        if critical_chance == 2:
             critical = 2
         else: 
             critical = 1
@@ -88,7 +88,7 @@ class BattleController:
         # calculate damage (adapted from https://bulbapedia.bulbagarden.net/wiki/Damage)
         damage = int((((((10 / 5) + 2) * power * (attack/defense))/50)+2) * stab * effectiveness * critical)
 
-        return damage, effectiveness
+        return damage, effectiveness, critical
 
     def run(self):
 
@@ -137,11 +137,10 @@ class BattleController:
                                     first_move = opponent_mv_index
                                     second_move = player_mv_index
 
-                            damage, self.first_effectiveness = self.calculate_damage(direction, first_move)
+                            damage, self.first_effectiveness, first_critical = self.calculate_damage(direction, first_move)
                             self.to_pokemon.current_hp -= damage
                             if self.to_pokemon.current_hp <= 0:
                                 self.state = 'faint'
-                            print(f'Effectiveness: {self.first_effectiveness}')
 
                             if self.to_pokemon == self.trainer_pokemon:
                                 self.view.update_player_HP()
@@ -153,19 +152,15 @@ class BattleController:
                                 self.from_pokemon = self.rival_pokemon
                                 print(self.rival_pokemon.current_hp)
     
-                            damage, self.second_effectiveness = self.calculate_damage(not direction, second_move)
-                            print(not direction)
+                            damage, self.second_effectiveness, second_critical = self.calculate_damage(not direction, second_move)
                             
                             self.to_pokemon.current_hp -= damage
                             if self.to_pokemon.current_hp <= 0:
                                 self.state = 'faint'
-                            print(f'Effectiveness: {self.first_effectiveness}')
                             if self.to_pokemon == self.trainer_pokemon:
                                 self.view.update_player_HP()
                             else:
-                                print('bye')
                                 self.view.update_opponent_HP()
-                                print(self.rival_pokemon.current_hp)
 
                             self.state = 'first_attack'
                         elif event.key == pygame.locals.K_2:
@@ -195,12 +190,10 @@ class BattleController:
                                     first_move = opponent_mv_index
                                     second_move = player_mv_index
 
-                            damage, self.first_effectiveness = self.calculate_damage(direction, first_move)
+                            damage, self.first_effectiveness, first_critical = self.calculate_damage(direction, first_move)
                             self.to_pokemon.current_hp -= damage
                             if self.to_pokemon.current_hp <= 0:
                                 self.state = 'faint'
-                            print(self.to_pokemon.nickname, self.to_pokemon.current_hp, damage)
-                            print(f'Effectiveness: {self.first_effectiveness}')
                             
                             if self.to_pokemon == self.trainer_pokemon:
                                 self.view.update_player_HP()
@@ -211,24 +204,22 @@ class BattleController:
                                 self.to_pokemon = self.trainer_pokemon
                                 self.from_pokemon = self.rival_pokemon
     
-                            damage, self.second_effectiveness = self.calculate_damage(not direction, second_move)
+                            damage, self.second_effectiveness, second_critical = self.calculate_damage(not direction, second_move)
                             self.to_pokemon.current_hp -= damage
                             if self.to_pokemon.current_hp <= 0:
                                 self.state = 'faint'
-                            print(self.to_pokemon.nickname, self.to_pokemon.current_hp, damage)
-                            print(f'Effectiveness: {self.second_effectiveness}')
-
+                            
                             if self.to_pokemon == self.trainer_pokemon:
                                 self.view.update_player_HP()
                             else:
                                 self.view.update_opponent_HP()
-                            self.state = 'attack'
+                            self.state = 'first_attack'
 
                 self.view.draw()
                 self.view.update()
             
             while self.state == 'first_attack':
-                self.view.show_attack(self.to_pokemon.nickname, self.to_pokemon.moves_list[first_move].name, self.first_effectiveness)
+                self.view.show_attack(self.to_pokemon.nickname, self.to_pokemon.moves_list[first_move].name, self.first_effectiveness, first_critical)
                 for event in pygame.event.get():
                     if event.type == pygame.locals.QUIT:
                         pygame.quit()
@@ -242,7 +233,7 @@ class BattleController:
                 self.view.update()
 
             while self.state == 'second_attack':
-                self.view.show_attack(self.from_pokemon.nickname, self.from_pokemon.moves_list[second_move].name, self.second_effectiveness)
+                self.view.show_attack(self.from_pokemon.nickname, self.from_pokemon.moves_list[second_move].name, self.second_effectiveness, second_critical)
                 for event in pygame.event.get():
                     if event.type == pygame.locals.QUIT:
                         pygame.quit()
