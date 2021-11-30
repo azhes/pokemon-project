@@ -88,11 +88,3 @@ class Pokemon(ABC):
         """ Views the moves for that pokemon """
         for move in self.moves_list:
             print(move.name)
-
-    def take_damage(self, value):
-        """ Method that is called when the pokemon takes damage """
-        self.hp = self.hp - value
-
-    def heal(self, value):
-        """ Method that is called when the pokemon heals damage """
-        self.hp = self.hp + value
