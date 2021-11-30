@@ -69,8 +69,8 @@ class BattleController:
         defense = self.trainer_pokemon.defense
 
         # 10% chance of a critical hit (double damage)
-        critical_chance = random.randint(0, 2)
-        if critical_chance == 2:
+        critical_chance = random.randint(0, 9)
+        if critical_chance == 9:
             critical = 2
         else: 
             critical = 1
@@ -111,21 +111,26 @@ class BattleController:
                         if event.key == pygame.locals.K_ESCAPE:
                             pygame.quit()
                         if event.key == pygame.locals.K_1:
+                            # If first move is selected
                             player_mv_index = 0
-                            opponent_mv_index = random.randint(0, 1)
+                            opponent_mv_index = random.randint(0, 1)    # Randomly select AI opponent's move
+                            # Determine speed
                             if self.trainer_pokemon.speed > self.rival_pokemon.speed:
+                                # If player's pokemon is faster
                                 direction = True
                                 self.from_pokemon = self.trainer_pokemon
                                 self.to_pokemon = self.rival_pokemon
                                 first_move = player_mv_index
                                 second_move = opponent_mv_index
                             elif self.trainer_pokemon.speed < self.rival_pokemon.speed:
+                                # If opponent's pokemon is faster
                                 direction = False
                                 self.from_pokemon = self.rival_pokemon
                                 self.to_pokemon = self.trainer_pokemon
                                 first_move = opponent_mv_index
                                 second_move = player_mv_index
                             else:
+                                # If both pokemon have equal speed
                                 direction = random.choice([True, False])
                                 self.from_pokemon = random.choice([self.trainer_pokemon, self.rival_pokemon])
                                 if self.from_pokemon == self.trainer_pokemon:
@@ -137,48 +142,58 @@ class BattleController:
                                     first_move = opponent_mv_index
                                     second_move = player_mv_index
 
-                            damage, self.first_effectiveness, first_critical = self.calculate_damage(direction, first_move)
-                            self.to_pokemon.current_hp -= damage
-                            if self.to_pokemon.current_hp <= 0:
-                                self.state = 'faint'
+                            # Faster pokemon attacks
+                            if self.from_pokemon.current_hp > 0:
+                                damage, self.first_effectiveness, first_critical = self.calculate_damage(direction, first_move)
+                                self.to_pokemon.current_hp -= damage
+                                if self.to_pokemon.current_hp <= 0:
+                                    self.state = 'faint'
 
-                            if self.to_pokemon == self.trainer_pokemon:
-                                self.view.update_player_HP()
-                                self.to_pokemon = self.rival_pokemon
-                                self.from_pokemon = self.trainer_pokemon
-                            else:
-                                self.view.update_opponent_HP()
-                                self.to_pokemon = self.trainer_pokemon
-                                self.from_pokemon = self.rival_pokemon
-                                print(self.rival_pokemon.current_hp)
-    
-                            damage, self.second_effectiveness, second_critical = self.calculate_damage(not direction, second_move)
-                            
-                            self.to_pokemon.current_hp -= damage
-                            if self.to_pokemon.current_hp <= 0:
-                                self.state = 'faint'
-                            if self.to_pokemon == self.trainer_pokemon:
-                                self.view.update_player_HP()
-                            else:
-                                self.view.update_opponent_HP()
+                                if self.to_pokemon == self.trainer_pokemon:
+                                    self.view.update_player_HP()
+                                    self.to_pokemon = self.rival_pokemon
+                                    self.from_pokemon = self.trainer_pokemon
+                                else:
+                                    self.view.update_opponent_HP()
+                                    self.to_pokemon = self.trainer_pokemon
+                                    self.from_pokemon = self.rival_pokemon
+                                    print(self.rival_pokemon.current_hp)
 
-                            self.state = 'first_attack'
+                            # Slower pokemon attacks
+                            if self.from_pokemon.current_hp > 0:
+                                damage, self.second_effectiveness, second_critical = self.calculate_damage(not direction, second_move)
+                                
+                                self.to_pokemon.current_hp -= damage
+                                if self.to_pokemon.current_hp <= 0:
+                                    self.state = 'faint'
+                                if self.to_pokemon == self.trainer_pokemon:
+                                    self.view.update_player_HP()
+                                else:
+                                    self.view.update_opponent_HP()
+                                # Change game state and show the attacks in the textbox
+                                self.state = 'first_attack'
+
                         elif event.key == pygame.locals.K_2:
+                            # If the first move is selected
                             player_mv_index = 1
-                            opponent_mv_index = random.randint(0, 1)
+                            opponent_mv_index = random.randint(0, 1)    # Randomly choose the AI opponent's move
+                            # Determine speed
                             if self.trainer_pokemon.speed > self.rival_pokemon.speed:
+                                # If player's pokemon is faster
                                 direction = True
                                 self.from_pokemon = self.trainer_pokemon
                                 self.to_pokemon = self.rival_pokemon
                                 first_move = player_mv_index
                                 second_move = opponent_mv_index
                             elif self.trainer_pokemon.speed < self.rival_pokemon.speed:
+                                # If opponent's pokemon is faster
                                 direction = False
                                 self.from_pokemon = self.rival_pokemon
                                 self.to_pokemon = self.trainer_pokemon
                                 first_move = opponent_mv_index
                                 second_move = player_mv_index
                             else:
+                                # If both pokemon have the same speed
                                 direction = random.choice([True, False])
                                 self.from_pokemon = random.choice([self.trainer_pokemon, self.rival_pokemon])
                                 if self.from_pokemon == self.trainer_pokemon:
@@ -190,35 +205,41 @@ class BattleController:
                                     first_move = opponent_mv_index
                                     second_move = player_mv_index
 
-                            damage, self.first_effectiveness, first_critical = self.calculate_damage(direction, first_move)
-                            self.to_pokemon.current_hp -= damage
-                            if self.to_pokemon.current_hp <= 0:
-                                self.state = 'faint'
+                            # Faster pokemon attacks
+                            if self.from_pokemon.current_hp > 0:
+                                damage, self.first_effectiveness, first_critical = self.calculate_damage(direction, first_move)
+                                self.to_pokemon.current_hp -= damage
+                                if self.to_pokemon.current_hp <= 0:
+                                    self.state = 'faint'
+                                
+                                if self.to_pokemon == self.trainer_pokemon:
+                                    self.view.update_player_HP()
+                                    self.to_pokemon = self.rival_pokemon
+                                    self.from_pokemon = self.trainer_pokemon
+                                else:
+                                    self.view.update_opponent_HP()
+                                    self.to_pokemon = self.trainer_pokemon
+                                    self.from_pokemon = self.rival_pokemon
                             
-                            if self.to_pokemon == self.trainer_pokemon:
-                                self.view.update_player_HP()
-                                self.to_pokemon = self.rival_pokemon
-                                self.from_pokemon = self.trainer_pokemon
-                            else:
-                                self.view.update_opponent_HP()
-                                self.to_pokemon = self.trainer_pokemon
-                                self.from_pokemon = self.rival_pokemon
-    
-                            damage, self.second_effectiveness, second_critical = self.calculate_damage(not direction, second_move)
-                            self.to_pokemon.current_hp -= damage
-                            if self.to_pokemon.current_hp <= 0:
-                                self.state = 'faint'
-                            
-                            if self.to_pokemon == self.trainer_pokemon:
-                                self.view.update_player_HP()
-                            else:
-                                self.view.update_opponent_HP()
-                            self.state = 'first_attack'
+                            # Slower pokemon attacks
+                            if self.from_pokemon.current_hp > 0:
+                                damage, self.second_effectiveness, second_critical = self.calculate_damage(not direction, second_move)
+                                self.to_pokemon.current_hp -= damage
+                                if self.to_pokemon.current_hp <= 0:
+                                    self.state = 'faint'
+                                
+                                if self.to_pokemon == self.trainer_pokemon:
+                                    self.view.update_player_HP()
+                                else:
+                                    self.view.update_opponent_HP()
+
+                                self.state = 'first_attack'
 
                 self.view.draw()
                 self.view.update()
             
             while self.state == 'first_attack':
+                # show the first attack
                 self.view.show_attack(self.to_pokemon.nickname, self.to_pokemon.moves_list[first_move].name, self.first_effectiveness, first_critical)
                 for event in pygame.event.get():
                     if event.type == pygame.locals.QUIT:
@@ -233,6 +254,7 @@ class BattleController:
                 self.view.update()
 
             while self.state == 'second_attack':
+                # show the second attack
                 self.view.show_attack(self.from_pokemon.nickname, self.from_pokemon.moves_list[second_move].name, self.second_effectiveness, second_critical)
                 for event in pygame.event.get():
                     if event.type == pygame.locals.QUIT:
@@ -245,7 +267,8 @@ class BattleController:
 
                 self.view.draw()
                 self.view.update()
-              
+        
+        # Determines if a pokemon has fainted
         if self.trainer_pokemon.current_hp <= 0:
             fainted_pokemon = self.trainer_pokemon
             result = 0
@@ -254,6 +277,7 @@ class BattleController:
             result = 1
 
         while running:
+            # Shows the fainted pokemon
             self.state = 'faint'
             while self.state == 'faint':
                 self.view.show_faint(fainted_pokemon.nickname)
@@ -269,6 +293,7 @@ class BattleController:
                 self.view.update()
             
             while self.state == 'result':
+                # Shows whether the player won or lost
                 self.view.show_result(result)
                 for event in pygame.event.get():
                         if event.type == pygame.locals.QUIT:
@@ -279,28 +304,3 @@ class BattleController:
                 
                 self.view.draw()
                 self.view.update()
-
-                    
-        
-
-                
-        # while HP != 0:
-            # get event loop
-            # 2 states: enter and not enter (self.state)
-            # if self.state == moves:
-            # if key_pressed == ENTER:
-            #   self.view.show_moves()
-            # elif key_pressed == "1, 2"
-            #   self.calcaulate_damage()
-            #   self.view.attack()
-            # self.view.draw()
-            # self.view.update()
-        # while running
-            # wait for Enter
-            # self.view.show_faint()
-            # wait for Enter
-            # self.view.show_result()
-            # self.view.draw()
-            # self.view.update()
-
-

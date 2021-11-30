@@ -64,6 +64,3 @@ class Game():
         battle_view = BattleView(window, font, trainer_pokemon, rival_pokemon)
         battle_controller = BattleController(battle_view, window, trainer_pokemon, rival_pokemon)
         battle_controller.run()
-
-
-        return True
