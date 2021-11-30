@@ -35,7 +35,7 @@ class BattleController:
                 'immune': []
             },
             'grass': {
-                'weakness': ['fire'],
+                'weakness': ['fire', 'poison'],
                 'strength': ['grass', 'electric', 'water'],
                 'immune': []
             },
