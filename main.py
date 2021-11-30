@@ -14,7 +14,6 @@ def main():
     window = pygame.display.set_mode((1000, 1000))
 
     # Create the game view and controller
-    game_view = GameView(window)
     game = Game()
 
     # Run the game
