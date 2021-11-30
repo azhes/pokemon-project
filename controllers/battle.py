@@ -84,8 +84,8 @@ class BattleController:
         defense = self.trainer_pokemon.defense
 
         # 10% chance of a critical hit (double damage)
-        critical_chance = random.randint(0, 9)
-        if critical_chance == 9:
+        critical_chance = random.randint(0, 15)
+        if critical_chance == 15:
             critical = 2
         else: 
             critical = 1

@@ -29,6 +29,8 @@ class BattleView(PygameView):
     def update_player_HP(self):
         """ Shows updated HP values for player's pokemon """
         max_hp = self.trainer_pokemon.max_hp
+        if self.trainer_pokemon.current_hp < 0:
+            self.trainer_pokemon.current_hp = 0
         hp_text = f'HP: {self.trainer_pokemon.current_hp}/{max_hp}'
         pygame.draw.rect(self.battle_surface, (255, 255, 255, 255), (20, 290, 200, 100))
         drawText(self.battle_surface, hp_text, (0, 0, 0), (20, 290, 200, 100), self.font)
@@ -36,6 +38,8 @@ class BattleView(PygameView):
     def update_opponent_HP(self):
         """ Shows updated HP values for opponent's pokemon """
         max_hp = self.rival_pokemon.max_hp
+        if self.rival_pokemon.current_hp < 0:
+            self.rival_pokemon.current_hp = 0
         hp_text = f'HP: {self.rival_pokemon.current_hp}/{max_hp}'
         pygame.draw.rect(self.battle_surface, (255, 255, 255, 255), (700, 450, 200, 100))
         drawText(self.battle_surface, hp_text, (0, 0, 0), (700, 450, 200, 100), self.font)
